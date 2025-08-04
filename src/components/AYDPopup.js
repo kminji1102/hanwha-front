@@ -7,7 +7,7 @@ const AYDPopup = ({ isOpen, onClose, currentId = 1, onIdChange }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [localId, setLocalId] = useState(currentId);
-  const [maxId, setMaxId] = useState(6);
+  const [maxId, setMaxId] = useState(3);
 
   useEffect(() => {
     if (isOpen && currentId) {
@@ -42,28 +42,6 @@ const AYDPopup = ({ isOpen, onClose, currentId = 1, onIdChange }) => {
     }
   };
 
-  const handleNext = () => {
-    const nextId = localId + 1;
-    if (nextId <= maxId) {
-      setLocalId(nextId);
-      if (onIdChange) {
-        onIdChange(nextId);
-      }
-      loadAYDData(nextId);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (localId > 1) {
-      const prevId = localId - 1;
-      setLocalId(prevId);
-      if (onIdChange) {
-        onIdChange(prevId);
-      }
-      loadAYDData(prevId);
-    }
-  };
-
   if (!isOpen) return null;
 
   return (
@@ -71,9 +49,6 @@ const AYDPopup = ({ isOpen, onClose, currentId = 1, onIdChange }) => {
       <div className="ayd-popup">
         <div className="ayd-header">
           <h2 className="ayd-title">Are You Developer?</h2>
-          <button className="ayd-close-btn" onClick={onClose}>
-            ✕
-          </button>
         </div>
         
         <div className="ayd-content">
@@ -115,27 +90,12 @@ const AYDPopup = ({ isOpen, onClose, currentId = 1, onIdChange }) => {
           ) : null}
         </div>
 
-        <div className="ayd-navigation">
-          <button 
-            className="nav-btn prev-btn" 
-            onClick={handlePrevious}
-            disabled={localId <= 1}
-          >
-            이전
-          </button>
           
           <div className="ayd-counter">
             {localId} / {maxId}
           </div>
-          
-          <button 
-            className="nav-btn next-btn" 
-            onClick={handleNext}
-            disabled={localId >= maxId}
-          >
-            다음
-          </button>
-        </div>
+
+        
       </div>
     </div>
   );
