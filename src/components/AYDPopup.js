@@ -69,8 +69,7 @@ const AYDPopup = ({ isOpen, onClose, currentId = 1, onIdChange }) => {
     setError('');
     try {
       const data = await getAYDById(id);
-      console.log('AYD 데이터:', data);
-      
+
       // 이미지 URL을 디코딩하여 사용
       if (data.imageFileUrl) {
         data.imageFileUrl = decodeURIComponent(data.imageFileUrl);
