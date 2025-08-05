@@ -251,6 +251,21 @@
   flex: 1;
   min-width: 200px;
   max-width: 300px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+}
+
+.quiz-image-wrapper:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.quiz-image-wrapper.selected {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
 }
 
 .quiz-image {
@@ -262,9 +277,17 @@
   transition: all 0.3s ease;
 }
 
-.quiz-image:hover {
+.quiz-image-wrapper:hover .quiz-image {
   transform: scale(1.02);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.image-label {
+  text-align: center;
+  margin-top: 8px;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
 }
 
 .quiz-options {
@@ -376,6 +399,25 @@
 
 .shake {
   animation: shake 0.5s ease-in-out;
+}
+
+/* 틀렸을 때 투명한 빨간 화면 오버레이 */
+.red-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(220, 53, 69, 0.3);
+  z-index: 1001;
+  animation: redFlash 0.5s ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes redFlash {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 /* 반응형 디자인 */
