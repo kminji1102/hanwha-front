@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { loginAPI } from '../api/auth';
 import AYDPopup from './AYDPopup';
-import '../pages/LoginPage.css';
+import './LoginPage.css';
 
-const LoginPage = () => {
+const LoginPage = ({ onLoginSuccess }) => {
   const [formData, setFormData] = useState({
     nickname: '',
     password: ''
@@ -32,7 +32,9 @@ const LoginPage = () => {
       if (response.success) {
         // JWT 토큰을 로컬 스토리지에 저장
         localStorage.setItem('token', response.token);
+        localStorage.setItem('userNickname', formData.nickname);
         setMessage('로그인 성공!');
+        
         // AYD 팝업 표시
         setShowAYDPopup(true);
         setCurrentAYDId(1);
@@ -48,6 +50,12 @@ const LoginPage = () => {
 
   const handleCloseAYD = () => {
     setShowAYDPopup(false);
+    // AYD 퀴즈 완료 후 홈페이지로 이동
+    if (onLoginSuccess) {
+      onLoginSuccess({
+        nickname: formData.nickname
+      });
+    }
   };
 
   const handleAYDIdChange = (newId) => {

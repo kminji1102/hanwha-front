@@ -1,0 +1,304 @@
+.home-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+.home-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 20px 0;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.welcome-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.logout-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.home-main {
+  flex: 1;
+  padding: 40px 20px;
+}
+
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.user-dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.dashboard-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-card h3 {
+  margin: 0 0 20px 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #667eea;
+  padding-bottom: 10px;
+}
+
+.user-details p {
+  margin: 10px 0;
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.user-details strong {
+  color: #333;
+  font-weight: 600;
+}
+
+.quiz-status {
+  text-align: center;
+}
+
+.quiz-status p {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.achievement {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  padding: 15px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.achievement-icon {
+  font-size: 24px;
+}
+
+.todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.todo-item:hover {
+  background: #e9ecef;
+  transform: translateX(5px);
+}
+
+.todo-item.completed {
+  background: #d4edda;
+  border-left: 4px solid #28a745;
+}
+
+.todo-check {
+  font-size: 18px;
+  font-weight: bold;
+  color: #28a745;
+  min-width: 20px;
+}
+
+.todo-item.completed .todo-check {
+  color: #28a745;
+}
+
+.todo-item:not(.completed) .todo-check {
+  color: #6c757d;
+}
+
+.todo-item span:last-child {
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+.todo-item.completed span:last-child {
+  text-decoration: line-through;
+  color: #6c757d;
+}
+
+.home-footer {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  text-align: center;
+  margin-top: auto;
+}
+
+.home-footer p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .welcome-title {
+    font-size: 24px;
+  }
+  
+  .user-info {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .user-dashboard {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .dashboard-card {
+    padding: 20px;
+  }
+  
+  .dashboard-card h3 {
+    font-size: 20px;
+  }
+}
+
+/* 다크 모드 지원 */
+@media (prefers-color-scheme: dark) {
+  .home-container {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+  }
+  
+  .home-header {
+    background: rgba(45, 55, 72, 0.95);
+  }
+  
+  .welcome-title {
+    color: #e2e8f0;
+  }
+  
+  .user-name {
+    color: #e2e8f0;
+  }
+  
+  .dashboard-card {
+    background: rgba(45, 55, 72, 0.9);
+    color: #e2e8f0;
+  }
+  
+  .dashboard-card h3 {
+    color: #e2e8f0;
+    border-bottom-color: #667eea;
+  }
+  
+  .user-details p {
+    color: #a0aec0;
+  }
+  
+  .user-details strong {
+    color: #e2e8f0;
+  }
+  
+  .todo-item {
+    background: #4a5568;
+    color: #e2e8f0;
+  }
+  
+  .todo-item:hover {
+    background: #718096;
+  }
+  
+  .todo-item.completed {
+    background: #2f855a;
+    border-left-color: #48bb78;
+  }
+  
+  .todo-item span:last-child {
+    color: #e2e8f0;
+  }
+  
+  .home-footer {
+    background: rgba(45, 55, 72, 0.9);
+  }
+  
+  .home-footer p {
+    color: #a0aec0;
+  }
+} 
