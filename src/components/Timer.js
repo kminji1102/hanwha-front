@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Timer.css';
 
-const Timer = () => {
+const Timer = ({ onLogout }) => {
   const [timeLeft, setTimeLeft] = useState(20 * 60); // 20분을 초로 변환
   const [isRunning, setIsRunning] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
@@ -19,14 +19,21 @@ const Timer = () => {
       // 타이머 종료 시 알림
       if ('Notification' in window && Notification.permission === 'granted') {
         new Notification('타이머 종료!', {
-          body: '20분 타이머가 종료되었습니다.',
+          body: '20분 타이머가 종료되었습니다. 자동으로 로그아웃됩니다.',
           icon: '/favicon.ico'
         });
       }
+      
+      // 3초 후 자동 로그아웃
+      setTimeout(() => {
+        if (onLogout) {
+          onLogout();
+        }
+      }, 3000);
     }
 
     return () => clearInterval(interval);
-  }, [isRunning, timeLeft]);
+  }, [isRunning, timeLeft]); // onLogout 제거
 
   const startTimer = () => {
     setIsRunning(true);
@@ -49,8 +56,10 @@ const Timer = () => {
     return ((20 * 60 - timeLeft) / (20 * 60)) * 100;
   };
 
+  const isWarning = getProgressPercentage() >= 80;
+
   return (
-    <div className={`timer-container ${isCompleted ? 'completed' : ''}`}>
+    <div className={`timer-container ${isCompleted ? 'completed' : ''} ${isWarning ? 'warning' : ''}`}>
       <div className="timer-display">
         <div className="timer-time">{formatTime(timeLeft)}</div>
         <div className="timer-progress">

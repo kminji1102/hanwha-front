@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import LoginPage from './components/LoginPage';
 import HomePage from './components/HomePage';
@@ -22,28 +22,28 @@ function App() {
     }
   }, []);
 
-  const handleLoginSuccess = (userData) => {
+  const handleLoginSuccess = useCallback((userData) => {
     setIsLoggedIn(true);
     setUserInfo(userData);
     // AYD 팝업 표시
     setShowAYDPopup(true);
-  };
+  }, []);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     localStorage.removeItem('token');
     localStorage.removeItem('userNickname');
     setIsLoggedIn(false);
     setUserInfo(null);
-  };
+  }, []);
 
-  const handleCloseAYD = () => {
+  const handleCloseAYD = useCallback(() => {
     setShowAYDPopup(false);
-  };
+  }, []);
 
   return (
     <div className="App">
       {/* 타이머는 모든 화면에서 표시 */}
-      <Timer />
+      <Timer onLogout={handleLogout} />
       
       {isLoggedIn ? (
         <HomePage 

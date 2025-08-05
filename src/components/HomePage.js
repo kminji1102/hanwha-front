@@ -64,7 +64,7 @@ const HomePage = ({ userInfo, onLogout }) => {
       </main>
 
       <footer className="home-footer">
-        <p>&copy; 2024 Developer Quiz Platform. All rights reserved.</p>
+        <p>&copy; Let's go below zero and hide from the sun.</p>
       </footer>
     </div>
   );

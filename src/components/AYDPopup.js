@@ -23,7 +23,7 @@ const quizData = [
     id: 2,
     question: "다음 이미지의 네모칸에 들어갈 말로 올바른 것은?",
     type: "text", // 텍스트 선택 타입
-    options: ["1번 역시 나야", "2번 나이스", "3번 왜?", "4번 잘됐다!"],
+    options: ["1번 역시 나야", "2번 나이스", "3번 왜?"],
     correctAnswer: 2,
     images: [이미지4, 이미지3]
   },
