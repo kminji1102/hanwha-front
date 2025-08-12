@@ -1,7 +1,86 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './HomePage.css';
+import TangramGame from './TangramGame';
+import { submitVueCode } from '../api/vueCode';
 
-const HomePage = ({ userInfo, onLogout }) => {
+const HomePage = ({ userInfo, onLogout, token }) => {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [step1Completed, setStep1Completed] = useState(false);
+  const [step2Completed, setStep2Completed] = useState(false);
+  const [lastVueCode, setLastVueCode] = useState('');
+
+  const handleGameSuccess = async (vueCode) => {
+    try {
+      // 성공 시 API 호출
+      if (token) {
+        await submitVueCode(vueCode, token);
+      }
+      setStep1Completed(true);
+      setLastVueCode(vueCode);
+      // 성공 메시지만 표시하고 자동으로 단계를 넘기지 않음
+    } catch (error) {
+      console.error('코드 제출 오류:', error);
+      // API 호출 실패해도 게임은 성공으로 처리
+      setStep1Completed(true);
+      setLastVueCode(vueCode);
+    }
+  };
+
+  const handleStep2Success = () => {
+    setStep2Completed(true);
+    // 2단계 성공 시에도 자동으로 단계를 넘기지 않음
+  };
+
+  const handleStepChange = (step) => {
+    if (step === 1) {
+      setCurrentStep(1);
+    } else if (step === 2 && step1Completed) {
+      setCurrentStep(2);
+    } else if (step === 3 && step1Completed && step2Completed) {
+      setCurrentStep(3);
+    }
+  };
+
+  const renderStepContent = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <div className="step-content">
+            <TangramGame onSuccess={handleGameSuccess} token={token} />
+          </div>
+        );
+      case 2:
+        return (
+          <div className="step-content">
+            <div className="step-card">
+              <h2>2단계 - 다음 단계</h2>
+              <p>1단계를 성공적으로 완료했습니다! 🎉</p>
+              <p>이제 2단계를 진행할 수 있습니다.</p>
+              {/* 여기에 2단계 게임 컴포넌트를 추가할 수 있습니다 */}
+              <button 
+                className="step-success-btn"
+                onClick={handleStep2Success}
+              >
+                2단계 완료하기
+              </button>
+            </div>
+          </div>
+        );
+      case 3:
+        return (
+          <div className="step-content">
+            <div className="step-card">
+              <h2>3단계 - 최종 단계</h2>
+              <p>모든 단계를 성공적으로 완료했습니다! 🏆</p>
+              <p>축하합니다!</p>
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="home-container">
       <header className="home-header">
@@ -17,50 +96,30 @@ const HomePage = ({ userInfo, onLogout }) => {
       </header>
 
       <main className="home-main">
-        <div className="dashboard">
-          <div className="user-dashboard">
-            <div className="dashboard-card">
-              <h3>사용자 정보</h3>
-              <div className="user-details">
-                <p><strong>닉네임:</strong> {userInfo.nickname}</p>
-                <p><strong>로그인 시간:</strong> {new Date().toLocaleString('ko-KR')}</p>
-              </div>
-            </div>
-
-            <div className="dashboard-card">
-              <h3>퀴즈 완료</h3>
-              <div className="quiz-status">
-                <p>Are You Developer? 퀴즈를 성공적으로 완료했습니다! 🎉</p>
-                <div className="achievement">
-                  <span className="achievement-icon">🏆</span>
-                  <span>개발자 자격 인증 완료</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="dashboard-card">
-              <h3>오늘의 할 일</h3>
-              <div className="todo-list">
-                <div className="todo-item completed">
-                  <span className="todo-check">✓</span>
-                  <span>로그인하기</span>
-                </div>
-                <div className="todo-item completed">
-                  <span className="todo-check">✓</span>
-                  <span>개발자 퀴즈 풀기</span>
-                </div>
-                <div className="todo-item">
-                  <span className="todo-check">○</span>
-                  <span>코딩 공부하기</span>
-                </div>
-                <div className="todo-item">
-                  <span className="todo-check">○</span>
-                  <span>프로젝트 진행하기</span>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="step-navigation">
+          <button 
+            className={`step-btn ${currentStep === 1 ? 'active' : ''} ${step1Completed ? 'completed' : ''}`}
+            onClick={() => handleStepChange(1)}
+          >
+            1단계 {step1Completed && '✓'}
+          </button>
+          <button 
+            className={`step-btn ${currentStep === 2 ? 'active' : ''} ${step1Completed ? 'completed' : ''}`}
+            onClick={() => handleStepChange(2)}
+            disabled={!step1Completed}
+          >
+            2단계 {step2Completed && '✓'}
+          </button>
+          <button 
+            className={`step-btn ${currentStep === 3 ? 'active' : ''} ${step1Completed && step2Completed ? 'completed' : ''}`}
+            onClick={() => handleStepChange(3)}
+            disabled={!(step1Completed && step2Completed)}
+          >
+            3단계
+          </button>
         </div>
+
+        {renderStepContent()}
       </main>
 
       <footer className="home-footer">

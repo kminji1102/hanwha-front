@@ -49,6 +49,7 @@ function App() {
         <HomePage 
           userInfo={userInfo} 
           onLogout={handleLogout}
+          token={localStorage.getItem('token')}
         />
       ) : (
         <LoginPage onLoginSuccess={handleLoginSuccess} />
