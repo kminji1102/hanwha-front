@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './HomePage.css';
 import TangramGame from './TangramGame';
+import LotteryGame from './LotteryGame';
 import { submitVueCode } from '../api/vueCode';
 
 const HomePage = ({ userInfo, onLogout, token }) => {
@@ -45,30 +46,19 @@ const HomePage = ({ userInfo, onLogout, token }) => {
     switch (currentStep) {
       case 1:
         return (
-          <div className="step-content">
+          <div className="step-content step-1-content">
             <TangramGame onSuccess={handleGameSuccess} token={token} />
           </div>
         );
       case 2:
         return (
-          <div className="step-content">
-            <div className="step-card">
-              <h2>2단계 - 다음 단계</h2>
-              <p>1단계를 성공적으로 완료했습니다! 🎉</p>
-              <p>이제 2단계를 진행할 수 있습니다.</p>
-              {/* 여기에 2단계 게임 컴포넌트를 추가할 수 있습니다 */}
-              <button 
-                className="step-success-btn"
-                onClick={handleStep2Success}
-              >
-                2단계 완료하기
-              </button>
-            </div>
+          <div className="step-content step-2-content">
+            <LotteryGame onSuccess={handleStep2Success} token={token} />
           </div>
         );
       case 3:
         return (
-          <div className="step-content">
+          <div className="step-content step-3-content">
             <div className="step-card">
               <h2>3단계 - 최종 단계</h2>
               <p>모든 단계를 성공적으로 완료했습니다! 🏆</p>

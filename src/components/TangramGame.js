@@ -197,7 +197,7 @@ const TangramGame = ({ onSuccess, token }) => {
       setStarState(newState);
       
       // API 호출하여 코드 저장
-      const response = await fetch('http://localhost:8080/vueCode/submit', {
+      const response = await fetch('/vueCode/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

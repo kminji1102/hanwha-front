@@ -28,10 +28,10 @@
 }
 
 .game-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: row;
   gap: 30px;
-  align-items: start;
+  align-items: flex-start;
 }
 
 .canvas-section {
@@ -40,6 +40,8 @@
   border-radius: 15px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid #e1e5e9;
+  flex: 1;
+  min-width: 0;
 }
 
 .canvas-section h3 {
@@ -140,6 +142,8 @@
   border-radius: 15px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid #e1e5e9;
+  flex: 1;
+  min-width: 0;
 }
 
 .code-section h3 {
@@ -278,7 +282,7 @@
 /* 반응형 디자인 */
 @media (max-width: 1024px) {
   .game-container {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     gap: 20px;
   }
   

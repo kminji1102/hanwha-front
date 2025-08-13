@@ -1,0 +1,496 @@
+.lottery-game {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+.game-header {
+  text-align: center;
+  margin-bottom: 30px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.game-header h2 {
+  margin: 0 0 10px 0;
+  font-size: 2.5em;
+  font-weight: bold;
+}
+
+.game-header p {
+  margin: 0;
+  font-size: 1.2em;
+  opacity: 0.9;
+}
+
+.game-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+}
+
+.lottery-section {
+  background: white;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 100%;
+  max-width: 1200px;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lottery-machine {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  width: 100%;
+  max-width: 500px;
+}
+
+/* 투명 볼 */
+.transparent-ball {
+  width: 500px;
+  height: 500px;
+  border: 10px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  background: 
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 30%, rgba(255, 255, 255, 0.05) 60%, rgba(0, 0, 0, 0.05) 100%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%);
+  box-shadow: 
+    0 0 0 5px rgba(255, 255, 255, 0.4),
+    0 0 0 10px rgba(255, 255, 255, 0.3),
+    0 0 0 15px rgba(255, 255, 255, 0.2),
+    0 0 0 20px rgba(255, 255, 255, 0.1),
+    inset 0 0 60px rgba(255, 255, 255, 0.15),
+    0 20px 40px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+  position: relative;
+  overflow: hidden;
+}
+
+.lottery-ball {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--ball-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 10px;
+  text-align: center;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+  
+  /* 중력 효과를 위한 transform-origin */
+  transform-origin: center bottom;
+}
+
+.lottery-ball.bouncing {
+  animation: bounceWithGravity 1.2s ease-in-out infinite;
+  animation-delay: var(--bounce-delay);
+}
+
+.lottery-ball.shuffling {
+  animation: naturalShuffle 0.3s ease-in-out infinite;
+  animation-delay: var(--shuffle-delay);
+}
+
+.lottery-ball.ball-out {
+  animation: ballExitUp 2s ease-out forwards;
+  z-index: 100;
+}
+
+/* 중력이 있는 바운스 애니메이션 */
+@keyframes bounceWithGravity {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    animation-timing-function: ease-out;
+  }
+  25% {
+    transform: translate(-50%, -50%) scale(1.1) translateY(-20px);
+    animation-timing-function: ease-in;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(0.95) translateY(3px);
+    animation-timing-function: ease-out;
+  }
+  75% {
+    transform: translate(-50%, -50%) scale(1.05) translateY(-12px);
+    animation-timing-function: ease-in;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    animation-timing-function: ease-out;
+  }
+}
+
+/* 공이 위로 빠져나오는 애니메이션 */
+@keyframes ballExitUp {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    top: var(--initial-y);
+    left: var(--initial-x);
+    opacity: 1;
+  }
+  30% {
+    transform: translate(-50%, -50%) scale(1.2);
+    top: var(--initial-y);
+    left: var(--initial-x);
+    opacity: 1;
+  }
+  60% {
+    transform: translate(-50%, -50%) scale(1.1);
+    top: calc(var(--initial-y) - 80px);
+    left: var(--initial-x);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    top: calc(var(--initial-y) - 150px);
+    left: var(--initial-x);
+    opacity: 0;
+  }
+}
+
+/* 공들이 섞이는 애니메이션 */
+@keyframes shuffleMove {
+  0% {
+    left: var(--initial-x);
+    top: var(--initial-y);
+    transform: translate(-50%, -50%) scale(1);
+  }
+  15% {
+    transform: translate(-50%, -50%) scale(1.05) translateY(-5px) rotate(45deg);
+  }
+  30% {
+    transform: translate(-50%, -50%) scale(0.95) translateY(3px) rotate(90deg);
+  }
+  45% {
+    transform: translate(-50%, -50%) scale(1.1) translateY(-8px) rotate(180deg);
+  }
+  60% {
+    transform: translate(-50%, -50%) scale(0.9) translateY(5px) rotate(270deg);
+  }
+  75% {
+    transform: translate(-50%, -50%) scale(1.05) translateY(-3px) rotate(360deg);
+  }
+  85% {
+    transform: translate(-50%, -50%) scale(0.98) translateY(2px) rotate(450deg);
+  }
+  100% {
+    left: var(--shuffled-x);
+    top: var(--shuffled-y);
+    transform: translate(-50%, -50%) scale(1) rotate(540deg);
+  }
+}
+
+/* 완전히 새로운 자연스러운 섞이기 애니메이션 */
+@keyframes naturalShuffle {
+  0% {
+    left: var(--initial-x);
+    top: var(--initial-y);
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+  
+  20% {
+    left: calc(var(--initial-x) + (var(--final-x) - var(--initial-x)) * 0.2);
+    top: calc(var(--initial-y) + (var(--final-y) - var(--initial-y)) * 0.2);
+    transform: translate(-50%, -50%) scale(1.15) rotate(72deg);
+  }
+  
+  40% {
+    left: calc(var(--initial-x) + (var(--final-x) - var(--initial-x)) * 0.4);
+    top: calc(var(--initial-y) + (var(--final-y) - var(--initial-y)) * 0.4);
+    transform: translate(-50%, -50%) scale(0.85) rotate(144deg);
+  }
+  
+  60% {
+    left: calc(var(--initial-x) + (var(--final-x) - var(--initial-x)) * 0.6);
+    top: calc(var(--initial-y) + (var(--final-y) - var(--initial-y)) * 0.6);
+    transform: translate(-50%, -50%) scale(1.1) rotate(216deg);
+  }
+  
+  80% {
+    left: calc(var(--initial-x) + (var(--final-x) - var(--initial-x)) * 0.8);
+    top: calc(var(--initial-y) + (var(--final-y) - var(--initial-y)) * 0.8);
+    transform: translate(-50%, -50%) scale(0.9) rotate(288deg);
+  }
+  
+  100% {
+    left: var(--final-x);
+    top: var(--final-y);
+    transform: translate(-50%, -50%) scale(1) rotate(360deg);
+  }
+}
+
+.lottery-ball .student-name {
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.2;
+  padding: 5px;
+  word-break: keep-all;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* 빠져나온 공이 표시될 영역 */
+.ball-exit-area {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 200;
+  pointer-events: none;
+}
+
+.exited-ball {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  pointer-events: auto;
+}
+
+.exited-ball .lottery-ball {
+  position: static;
+  transform: none;
+  width: 80px;
+  height: 80px;
+  animation: winnerPulse 2s ease-in-out infinite;
+}
+
+.exited-ball .student-name {
+  font-size: 12px;
+  padding: 8px;
+}
+
+.winner-text {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #667eea;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes winnerPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 
+      0 4px 8px rgba(0, 0, 0, 0.3),
+      inset 0 2px 4px rgba(255, 255, 255, 0.3),
+      0 0 20px rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 
+      0 6px 12px rgba(0, 0, 0, 0.4),
+      inset 0 2px 4px rgba(255, 255, 255, 0.3),
+      0 0 30px rgba(255, 255, 255, 0.8);
+  }
+}
+
+.lottery-controls {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.draw-btn, .reset-btn {
+  padding: 15px 30px;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.draw-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.draw-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.draw-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.draw-btn.drawing {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.reset-btn {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  color: white;
+}
+
+.reset-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+}
+
+.game-info {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 1200px;
+  text-align: center;
+}
+
+.game-status {
+  margin-bottom: 25px;
+}
+
+.game-status p {
+  margin: 8px 0;
+  color: #666;
+  font-size: 16px;
+  text-align: center;
+}
+
+.lottery-loading, .lottery-error {
+  text-align: center;
+  padding: 50px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.lottery-loading {
+  font-size: 1.5em;
+  color: #667eea;
+}
+
+.lottery-error h3 {
+  color: #ff6b6b;
+  margin-bottom: 15px;
+}
+
+.lottery-error p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.retry-btn {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .game-container {
+    gap: 20px;
+  }
+  
+  .transparent-ball {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .lottery-ball {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .lottery-ball .student-name {
+    font-size: 8px;
+    padding: 3px;
+  }
+  
+  .exited-ball .lottery-ball {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .exited-ball .student-name {
+    font-size: 11px;
+    padding: 6px;
+  }
+  
+  .lottery-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .draw-btn, .reset-btn {
+    width: 100%;
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .transparent-ball {
+    width: 250px;
+    height: 250px;
+  }
+  
+  .lottery-ball {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .lottery-ball .student-name {
+    font-size: 7px;
+    padding: 2px;
+  }
+  
+  .exited-ball .lottery-ball {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .exited-ball .student-name {
+    font-size: 10px;
+    padding: 5px;
+  }
+}

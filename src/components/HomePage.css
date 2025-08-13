@@ -250,7 +250,64 @@
   color: #ccc;
 }
 
-.step-content {
+/* 1단계 - TangramGame */
+.step-1-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 1단계 내부 컴포넌트 스타일 재정의 */
+.step-1-content .tangram-game {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.step-1-content .game-container {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.step-1-content .canvas-section,
+.step-1-content .code-section {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 2단계 - LotteryGame */
+.step-2-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 2단계 내부 컴포넌트 스타일 재정의 */
+.step-2-content .lottery-game {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.step-2-content .game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.step-2-content .game-info {
+  width: 100%;
+  max-width: 1200px;
+  text-align: center;
+}
+
+.step-2-content .lottery-section {
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* 3단계 - 최종 단계 카드 */
+.step-3-content {
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -359,6 +416,23 @@
   
   .dashboard-card h3 {
     font-size: 20px;
+  }
+  
+  /* 1단계 모바일 반응형 */
+  .step-1-content .game-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .step-1-content .canvas-section,
+  .step-1-content .code-section {
+    padding: 20px;
+  }
+  
+  /* 2단계 모바일 반응형 */
+  .step-2-content .lottery-balls-container {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 15px;
   }
 }
 
