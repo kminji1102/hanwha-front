@@ -3,6 +3,7 @@ import './HomePage.css';
 import TangramGame from './TangramGame';
 import LotteryGame from './LotteryGame';
 import { submitVueCode } from '../api/vueCode';
+import companyLogo from '../image/한화시스템&엔코아_투명.png';
 
 const HomePage = ({ userInfo, onLogout, token }) => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -133,7 +134,14 @@ const HomePage = ({ userInfo, onLogout, token }) => {
     <div className="home-container">
       <header className="home-header">
         <div className="header-content">
-          <h1 className="welcome-title">환영합니다!</h1>
+          <div className="header-left">
+            <img 
+              src={companyLogo}
+              alt="한화시스템&엔코아 로고" 
+              className="company-logo"
+            />
+            <h1 className="welcome-title"></h1>
+          </div>
           <div className="user-info">
             <span className="user-name">{userInfo.nickname}</span>
             <button className="logout-btn" onClick={onLogout}>

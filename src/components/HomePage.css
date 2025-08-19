@@ -17,19 +17,32 @@
 }
 
 .header-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.company-logo {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
 }
 
 .welcome-title {
   margin: 0;
-  font-size: 28px;
+  font-size: 2.2em;
   font-weight: 600;
   color: #1e3a8a;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .user-info {
@@ -420,33 +433,52 @@
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
-  .header-content {
-    flex-direction: column;
+  .home-container {
+    padding: 15px;
+  }
+  
+  .header-left {
     gap: 15px;
   }
   
-  .welcome-title {
-    font-size: 24px;
+  .company-logo {
+    height: 40px;
   }
   
-  .user-info {
+  .welcome-title {
+    font-size: 1.8em;
+  }
+  
+  .step-navigation {
     flex-direction: column;
     gap: 10px;
   }
   
-  .step-navigation {
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  
   .step-btn {
-    padding: 10px 20px;
-    font-size: 13px;
-    min-width: 100px;
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
   }
   
   .step-card {
     padding: 20px;
+  }
+  
+  .step-card h2 {
+    font-size: 1.5em;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .dashboard-card {
+    padding: 20px;
+  }
+  
+  .dashboard-card h3 {
+    font-size: 1.2em;
   }
   
   /* 3단계 모바일 반응형 */
