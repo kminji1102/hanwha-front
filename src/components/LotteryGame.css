@@ -2,28 +2,30 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  background: #f8f9fa;
+  min-height: 100vh;
 }
 
 .game-header {
   text-align: center;
   margin-bottom: 30px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #1e3a8a;
   color: white;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(30, 58, 138, 0.2);
 }
 
 .game-header h2 {
   margin: 0 0 10px 0;
   font-size: 2.5em;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .game-header p {
   margin: 0;
-  font-size: 1.2em;
+  font-size: 1.1em;
   opacity: 0.9;
 }
 
@@ -37,8 +39,8 @@
 .lottery-section {
   background: white;
   padding: 40px;
-  border-radius: 15px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   text-align: center;
   width: 100%;
   max-width: 1200px;
@@ -47,6 +49,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  border: 1px solid #e5e7eb;
 }
 
 .lottery-machine {
@@ -56,26 +59,21 @@
   align-items: center;
   gap: 30px;
   width: 100%;
-  max-width: 500px;
+  max-width: 600px;
 }
 
 /* 투명 볼 */
 .transparent-ball {
   width: 500px;
   height: 500px;
-  border: 10px solid rgba(255, 255, 255, 0.9);
+  border: 8px solid rgba(59, 130, 246, 0.2);
   border-radius: 50%;
-  background: 
-    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 30%, rgba(255, 255, 255, 0.05) 60%, rgba(0, 0, 0, 0.05) 100%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%);
+  background: rgba(59, 130, 246, 0.05);
   box-shadow: 
-    0 0 0 5px rgba(255, 255, 255, 0.4),
-    0 0 0 10px rgba(255, 255, 255, 0.3),
-    0 0 0 15px rgba(255, 255, 255, 0.2),
-    0 0 0 20px rgba(255, 255, 255, 0.1),
-    inset 0 0 60px rgba(255, 255, 255, 0.15),
-    0 20px 40px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(8px);
+    0 0 0 4px rgba(59, 130, 246, 0.1),
+    0 0 0 8px rgba(59, 130, 246, 0.05),
+    inset 0 0 40px rgba(59, 130, 246, 0.05),
+    0 10px 20px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
 }
@@ -90,169 +88,113 @@
   align-items: center;
   justify-content: center;
   color: white;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 10px;
   text-align: center;
   box-shadow: 
-    0 4px 8px rgba(0, 0, 0, 0.3),
+    0 4px 8px rgba(0, 0, 0, 0.2),
     inset 0 2px 4px rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
   cursor: pointer;
-  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.2);
   
-  /* 중력 효과를 위한 transform-origin */
-  transform-origin: center bottom;
+  /* 기본 위치 설정 제거 - JavaScript에서 인라인 스타일로 설정 */
 }
 
-.lottery-ball.bouncing {
-  animation: bounceWithGravity 1.2s ease-in-out infinite;
-  animation-delay: var(--bounce-delay);
-}
-
+/* 섞이는 애니메이션 - 범용적 패턴 */
 .lottery-ball.shuffling {
-  animation: naturalShuffle 0.3s ease-in-out infinite;
+  animation: var(--shuffle-animation) var(--shuffle-duration) ease-in-out infinite;
   animation-delay: var(--shuffle-delay);
 }
 
-.lottery-ball.ball-out {
-  animation: ballExitUp 2s ease-out forwards;
-  z-index: 100;
+/* 애니메이션 키프레임들 */
+@keyframes shuffleCircle1 {
+  0% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  25% { left: 70%; top: 30%; transform: translate(-50%, -50%) scale(1.1) rotate(90deg); }
+  50% { left: 70%; top: 70%; transform: translate(-50%, -50%) scale(0.9) rotate(180deg); }
+  75% { left: 30%; top: 70%; transform: translate(-50%, -50%) scale(1.05) rotate(270deg); }
+  100% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1) rotate(360deg); }
 }
 
-/* 중력이 있는 바운스 애니메이션 */
-@keyframes bounceWithGravity {
-  0% {
-    transform: translate(-50%, -50%) scale(1);
-    animation-timing-function: ease-out;
-  }
-  25% {
-    transform: translate(-50%, -50%) scale(1.1) translateY(-20px);
-    animation-timing-function: ease-in;
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(0.95) translateY(3px);
-    animation-timing-function: ease-out;
-  }
-  75% {
-    transform: translate(-50%, -50%) scale(1.05) translateY(-12px);
-    animation-timing-function: ease-in;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-    animation-timing-function: ease-out;
-  }
+@keyframes shuffleZigzag1 {
+  0% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1); }
+  20% { left: 25%; top: 60%; transform: translate(-50%, -50%) scale(1.2); }
+  40% { left: 75%; top: 40%; transform: translate(-50%, -50%) scale(0.8); }
+  60% { left: 35%; top: 75%; transform: translate(-50%, -50%) scale(1.1); }
+  80% { left: 65%; top: 25%; transform: translate(-50%, -50%) scale(0.9); }
+  100% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1); }
 }
 
-/* 공이 위로 빠져나오는 애니메이션 */
-@keyframes ballExitUp {
-  0% {
-    transform: translate(-50%, -50%) scale(1);
-    top: var(--initial-y);
-    left: var(--initial-x);
-    opacity: 1;
-  }
-  30% {
-    transform: translate(-50%, -50%) scale(1.2);
-    top: var(--initial-y);
-    left: var(--initial-x);
-    opacity: 1;
-  }
-  60% {
-    transform: translate(-50%, -50%) scale(1.1);
-    top: calc(var(--initial-y) - 80px);
-    left: var(--initial-x);
-    opacity: 0.8;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-    top: calc(var(--initial-y) - 150px);
-    left: var(--initial-x);
-    opacity: 0;
-  }
+@keyframes shuffleFigure8 {
+  0% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1); }
+  16% { left: 30%; top: 30%; transform: translate(-50%, -50%) scale(1.1); }
+  33% { left: 70%; top: 30%; transform: translate(-50%, -50%) scale(0.9); }
+  50% { left: 70%; top: 70%; transform: translate(-50%, -50%) scale(1.05); }
+  66% { left: 30%; top: 70%; transform: translate(-50%, -50%) scale(0.95); }
+  83% { left: 30%; top: 30%; transform: translate(-50%, -50%) scale(1.15); }
+  100% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1); }
 }
 
-/* 공들이 섞이는 애니메이션 */
-@keyframes shuffleMove {
-  0% {
-    left: var(--initial-x);
-    top: var(--initial-y);
-    transform: translate(-50%, -50%) scale(1);
-  }
-  15% {
-    transform: translate(-50%, -50%) scale(1.05) translateY(-5px) rotate(45deg);
-  }
-  30% {
-    transform: translate(-50%, -50%) scale(0.95) translateY(3px) rotate(90deg);
-  }
-  45% {
-    transform: translate(-50%, -50%) scale(1.1) translateY(-8px) rotate(180deg);
-  }
-  60% {
-    transform: translate(-50%, -50%) scale(0.9) translateY(5px) rotate(270deg);
-  }
-  75% {
-    transform: translate(-50%, -50%) scale(1.05) translateY(-3px) rotate(360deg);
-  }
-  85% {
-    transform: translate(-50%, -50%) scale(0.98) translateY(2px) rotate(450deg);
-  }
-  100% {
-    left: var(--shuffled-x);
-    top: var(--shuffled-y);
-    transform: translate(-50%, -50%) scale(1) rotate(540deg);
-  }
+@keyframes shuffleRandom1 {
+  0% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1); }
+  25% { left: 80%; top: 20%; transform: translate(-50%, -50%) scale(1.3); }
+  50% { left: 20%; top: 80%; transform: translate(-50%, -50%) scale(0.7); }
+  75% { left: 60%; top: 40%; transform: translate(-50%, -50%) scale(1.1); }
+  100% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1); }
 }
 
-/* 완전히 새로운 자연스러운 섞이기 애니메이션 */
-@keyframes naturalShuffle {
-  0% {
-    left: var(--initial-x);
-    top: var(--initial-y);
-    transform: translate(-50%, -50%) scale(1) rotate(0deg);
-  }
-  
-  20% {
-    left: calc(var(--initial-x) + (var(--final-x) - var(--initial-x)) * 0.2);
-    top: calc(var(--initial-y) + (var(--final-y) - var(--initial-y)) * 0.2);
-    transform: translate(-50%, -50%) scale(1.15) rotate(72deg);
-  }
-  
-  40% {
-    left: calc(var(--initial-x) + (var(--final-x) - var(--initial-x)) * 0.4);
-    top: calc(var(--initial-y) + (var(--final-y) - var(--initial-y)) * 0.4);
-    transform: translate(-50%, -50%) scale(0.85) rotate(144deg);
-  }
-  
-  60% {
-    left: calc(var(--initial-x) + (var(--final-x) - var(--initial-x)) * 0.6);
-    top: calc(var(--initial-y) + (var(--final-y) - var(--initial-y)) * 0.6);
-    transform: translate(-50%, -50%) scale(1.1) rotate(216deg);
-  }
-  
-  80% {
-    left: calc(var(--initial-x) + (var(--final-x) - var(--initial-x)) * 0.8);
-    top: calc(var(--initial-y) + (var(--final-y) - var(--initial-y)) * 0.8);
-    transform: translate(-50%, -50%) scale(0.9) rotate(288deg);
-  }
-  
-  100% {
-    left: var(--final-x);
-    top: var(--final-y);
-    transform: translate(-50%, -50%) scale(1) rotate(360deg);
-  }
+@keyframes shuffleSpiral1 {
+  0% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1); }
+  20% { left: 60%; top: 30%; transform: translate(-50%, -50%) scale(1.1); }
+  40% { left: 70%; top: 50%; transform: translate(-50%, -50%) scale(0.9); }
+  60% { left: 60%; top: 70%; transform: translate(-50%, -50%) scale(1.05); }
+  80% { left: 40%; top: 70%; transform: translate(-50%, -50%) scale(0.95); }
+  100% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1); }
 }
 
-.lottery-ball .student-name {
-  font-size: 10px;
-  font-weight: 800;
-  line-height: 1.2;
-  padding: 5px;
-  word-break: keep-all;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+@keyframes shuffleSquare1 {
+  0% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1); }
+  25% { left: 80%; top: 20%; transform: translate(-50%, -50%) scale(1.1); }
+  50% { left: 50%; top: 20%; transform: translate(-50%, -50%) scale(0.9); }
+  75% { left: 50%; top: 50%; transform: translate(-50%, -50%) scale(1.05); }
+  100% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1); }
 }
 
-/* 빠져나온 공이 표시될 영역 */
-.ball-exit-area {
+@keyframes shuffleTriangle1 {
+  0% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1); }
+  33% { left: 25%; top: 40%; transform: translate(-50%, -50%) scale(1.2); }
+  66% { left: 75%; top: 40%; transform: translate(-50%, -50%) scale(0.8); }
+  100% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes shuffleRandom2 {
+  0% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1); }
+  20% { left: 45%; top: 25%; transform: translate(-50%, -50%) scale(1.1); }
+  40% { left: 75%; top: 60%; transform: translate(-50%, -50%) scale(0.9); }
+  60% { left: 55%; top: 75%; transform: translate(-50%, -50%) scale(1.05); }
+  80% { left: 30%; top: 35%; transform: translate(-50%, -50%) scale(0.95); }
+  100% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes shuffleCircle2 {
+  0% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  25% { left: 60%; top: 45%; transform: translate(-50%, -50%) scale(1.1) rotate(-90deg); }
+  50% { left: 60%; top: 55%; transform: translate(-50%, -50%) scale(0.9) rotate(-180deg); }
+  75% { left: 40%; top: 55%; transform: translate(-50%, -50%) scale(1.05) rotate(-270deg); }
+  100% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1) rotate(-360deg); }
+}
+
+@keyframes shuffleZigzag2 {
+  0% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1); }
+  20% { left: 35%; top: 65%; transform: translate(-50%, -50%) scale(1.2); }
+  40% { left: 65%; top: 35%; transform: translate(-50%, -50%) scale(0.8); }
+  60% { left: 45%; top: 65%; transform: translate(-50%, -50%) scale(1.1); }
+  80% { left: 75%; top: 55%; transform: translate(-50%, -50%) scale(0.9); }
+  100% { left: var(--initial-left, 50%); top: var(--initial-top, 50%); transform: translate(-50%, -50%) scale(1); }
+}
+
+/* 당첨자 결과 표시 영역 */
+.winner-result-area {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -262,20 +204,20 @@
   pointer-events: none;
 }
 
-.exited-ball {
+.winner-display {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 15px;
-  background: rgba(255, 255, 255, 0.95);
+  gap: 15px;
+  padding: 25px;
+  background: white;
   border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e5e7eb;
   pointer-events: auto;
 }
 
-.exited-ball .lottery-ball {
+.winner-display .lottery-ball {
   position: static;
   transform: none;
   width: 80px;
@@ -283,32 +225,38 @@
   animation: winnerPulse 2s ease-in-out infinite;
 }
 
-.exited-ball .student-name {
+.lottery-ball .student-name {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 6px;
+  word-break: keep-all;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.winner-display .student-name {
   font-size: 12px;
   padding: 8px;
 }
 
 .winner-text {
   font-size: 1.3em;
-  font-weight: bold;
-  color: #667eea;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+  color: #1e3a8a;
 }
 
 @keyframes winnerPulse {
   0%, 100% {
     transform: scale(1);
     box-shadow: 
-      0 4px 8px rgba(0, 0, 0, 0.3),
-      inset 0 2px 4px rgba(255, 255, 255, 0.3),
-      0 0 20px rgba(255, 255, 255, 0.5);
+      0 4px 8px rgba(0, 0, 0, 0.2),
+      inset 0 2px 4px rgba(255, 255, 255, 0.3);
   }
   50% {
-    transform: scale(1.1);
+    transform: scale(1.05);
     box-shadow: 
-      0 6px 12px rgba(0, 0, 0, 0.4),
-      inset 0 2px 4px rgba(255, 255, 255, 0.3),
-      0 0 30px rgba(255, 255, 255, 0.8);
+      0 6px 12px rgba(0, 0, 0, 0.3),
+      inset 0 2px 4px rgba(255, 255, 255, 0.3);
   }
 }
 
@@ -317,38 +265,51 @@
   gap: 15px;
   justify-content: center;
   flex-wrap: wrap;
-  margin-top: 20px;
+  margin-top: 25px;
   width: 100%;
 }
 
 .draw-btn, .reset-btn {
-  padding: 15px 30px;
+  padding: 12px 24px;
   border: none;
-  border-radius: 25px;
+  border-radius: 8px;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   min-width: 120px;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 .draw-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #1e3a8a;
   color: white;
 }
 
 .draw-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  background: #1e40af;
+  transform: translateY(-1px);
 }
 
 .draw-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
 }
 
 .draw-btn.drawing {
   animation: pulse 1s infinite;
+}
+
+.draw-btn.drawn {
+  background: #059669;
+  color: white;
+  opacity: 0.9;
+  cursor: not-allowed;
+}
+
+.draw-btn.drawn:hover {
+  transform: none;
 }
 
 @keyframes pulse {
@@ -357,23 +318,24 @@
 }
 
 .reset-btn {
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  background: #dc2626;
   color: white;
 }
 
 .reset-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+  background: #b91c1c;
+  transform: translateY(-1px);
 }
 
 .game-info {
   background: white;
   padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   width: 100%;
   max-width: 1200px;
   text-align: center;
+  border: 1px solid #e5e7eb;
 }
 
 .game-status {
@@ -381,79 +343,85 @@
 }
 
 .game-status p {
-  margin: 8px 0;
-  color: #666;
+  margin: 10px 0;
+  color: #374151;
   font-size: 16px;
   text-align: center;
+  font-weight: 500;
 }
 
 .lottery-loading, .lottery-error {
   text-align: center;
-  padding: 50px;
+  padding: 60px;
   background: white;
-  border-radius: 15px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
 }
 
 .lottery-loading {
   font-size: 1.5em;
-  color: #667eea;
+  color: #1e3a8a;
+  font-weight: 600;
 }
 
 .lottery-error h3 {
-  color: #ff6b6b;
+  color: #dc2626;
   margin-bottom: 15px;
+  font-size: 1.8em;
 }
 
 .lottery-error p {
-  color: #666;
-  margin-bottom: 20px;
+  color: #6b7280;
+  margin-bottom: 25px;
+  font-size: 1.1em;
 }
 
 .retry-btn {
   padding: 12px 24px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #1e3a8a;
   color: white;
   border: none;
-  border-radius: 20px;
-  font-size: 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .retry-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  background: #1e40af;
+  transform: translateY(-1px);
 }
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .game-container {
-    gap: 20px;
+    gap: 25px;
   }
   
   .transparent-ball {
-    width: 300px;
-    height: 300px;
+    width: 350px;
+    height: 350px;
   }
   
   .lottery-ball {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
   }
   
   .lottery-ball .student-name {
     font-size: 8px;
-    padding: 3px;
+    padding: 4px;
   }
   
-  .exited-ball .lottery-ball {
+  .winner-display .lottery-ball {
     width: 70px;
     height: 70px;
   }
   
-  .exited-ball .student-name {
-    font-size: 11px;
+  .winner-display .student-name {
+    font-size: 10px;
     padding: 6px;
   }
   
@@ -465,32 +433,57 @@
   .draw-btn, .reset-btn {
     width: 100%;
     max-width: 200px;
+    margin: 5px 0;
+  }
+  
+  .game-header h2 {
+    font-size: 2em;
+  }
+  
+  .game-header p {
+    font-size: 1em;
   }
 }
 
 @media (max-width: 480px) {
   .transparent-ball {
-    width: 250px;
-    height: 250px;
+    width: 300px;
+    height: 300px;
   }
   
   .lottery-ball {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
   }
   
   .lottery-ball .student-name {
     font-size: 7px;
-    padding: 2px;
+    padding: 3px;
   }
   
-  .exited-ball .lottery-ball {
+  .winner-display .lottery-ball {
     width: 60px;
     height: 60px;
   }
   
-  .exited-ball .student-name {
-    font-size: 10px;
+  .winner-display .student-name {
+    font-size: 9px;
     padding: 5px;
+  }
+  
+  .game-header h2 {
+    font-size: 1.8em;
+  }
+  
+  .game-header p {
+    font-size: 0.9em;
+  }
+  
+  .lottery-section {
+    padding: 25px 15px;
+  }
+  
+  .game-info {
+    padding: 25px 15px;
   }
 }

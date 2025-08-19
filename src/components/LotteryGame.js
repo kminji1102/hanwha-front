@@ -8,10 +8,8 @@ const LotteryGame = ({ onSuccess, token }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [drawCount, setDrawCount] = useState(0);
-  const [isBallOut, setIsBallOut] = useState(false);
-  const [ballPositions, setBallPositions] = useState([]);
+  const [hasDrawn, setHasDrawn] = useState(false);
   const [isShuffling, setIsShuffling] = useState(false);
-  const [shuffledPositions, setShuffledPositions] = useState([]);
 
   // 학생 목록 가져오기
   useEffect(() => {
@@ -23,73 +21,6 @@ const LotteryGame = ({ onSuccess, token }) => {
     
     fetchStudents();
   }, [token]);
-
-  // 공들의 자연스러운 위치 계산 (자연스럽게 분산)
-  useEffect(() => {
-    if (students.length > 0) {
-      calculateBallPositions();
-    }
-  }, [students]);
-
-  const calculateBallPositions = () => {
-    const positions = [];
-    const centerX = 250; // 투명 볼의 중심 X
-    const centerY = 250; // 투명 볼의 중심 Y (500px 높이의 절반)
-    const maxRadius = 180; // 투명 볼 내부 반지름 (공들이 겹치지 않도록)
-    
-    students.forEach((student, index) => {
-      // 각 공을 투명 볼 안에 균등하게 분산 배치
-      const angle = (index * (360 / students.length)) + (Math.random() * 30 - 15); // 균등 분할 + 약간의 랜덤
-      
-      // 분산 (중앙에서 약간 떨어진 거리)
-      const distance = maxRadius * (0.3 + Math.random() * 0.4);
-      
-      const x = centerX + Math.cos(angle * Math.PI / 180) * distance;
-      const y = centerY + Math.sin(angle * Math.PI / 180) * distance;
-      
-      // 투명 볼 경계 내에 위치하도록 제한
-      const clampedX = Math.max(40, Math.min(460, x)); // 80px 공 크기 고려
-      const clampedY = Math.max(40, Math.min(460, y));
-      
-      positions.push({ 
-        x: clampedX, 
-        y: clampedY, 
-        angle, 
-        distance 
-      });
-    });
-    
-    setBallPositions(positions);
-  };
-
-  // 공들을 섞는 함수
-  const shuffleBalls = () => {
-    const positions = [];
-    
-    // 학생들을 랜덤하게 섞기
-    const shuffledStudents = [...students].sort(() => Math.random() - 0.5);
-    
-    shuffledStudents.forEach((student, index) => {
-      // 각 공이 다른 공의 원래 위치로 이동하도록 설정
-      const targetIndex = (index + Math.floor(Math.random() * students.length)) % students.length;
-      const targetPosition = ballPositions[targetIndex];
-      
-      if (targetPosition) {
-        const duration = 0.5 + Math.random() * 0.5; // 0.5-1초
-        const delay = index * 0.05; // 각 공마다 0.05초씩 지연
-        
-        positions.push({
-          x: targetPosition.x,
-          y: targetPosition.y,
-          studentId: student.id,
-          duration: duration,
-          delay: delay
-        });
-      }
-    });
-    
-    setShuffledPositions(positions);
-  };
 
   const fetchStudents = async () => {
     try {
@@ -124,76 +55,49 @@ const LotteryGame = ({ onSuccess, token }) => {
     
     setIsDrawing(true);
     setSelectedStudent(null);
-    setIsBallOut(false);
-    setIsShuffling(false);
+    setIsShuffling(true);
     
-    // 0.5초 후에 공들이 계속 뒤섞이기 시작
-    setTimeout(() => {
-      setIsShuffling(true);
+    // 3초 동안 공들이 섞이기
+    setTimeout(async () => {
+      setIsShuffling(false);
       
-      // 공들을 계속 뒤섞이는 함수
-      const continuousShuffle = () => {
-        if (isShuffling) {
-          shuffleBalls();
-          // 0.1초마다 새로운 위치로 계속 이동 (매우 빠르게)
-          setTimeout(continuousShuffle, 100);
-        }
-      };
-      
-      continuousShuffle();
-      
-      // 4초 후에 섞이기 완료
-      setTimeout(() => {
-        setIsShuffling(false);
-        
-        // 0.3초 후에 공이 빠져나오는 효과 시작 (0.8초에서 0.3초로 단축)
-        setTimeout(() => {
-          setIsBallOut(true);
-          
-          // 공이 빠져나오는 애니메이션이 완전히 끝난 후 (2초) 결과 표시
-          setTimeout(async () => {
-            try {
-              const response = await fetch('/student/roulette', {
-                method: 'POST',
-                headers: {
-                  'Authorization': `Bearer ${token}`,
-                  'Content-Type': 'application/json'
-                }
-              });
-
-              if (response.ok) {
-                const result = await response.json();
-                setSelectedStudent(result.student);
-                setDrawCount(prev => prev + 1);
-                
-                // 성공 시 콜백 호출
-                onSuccess(`뽑기 게임 완료! 당첨자: ${result.student.name}`);
-              } else if (response.status === 401) {
-                setError('인증이 만료되었습니다. 다시 로그인해주세요.');
-              } else if (response.status === 403) {
-                setError('접근 권한이 없습니다.');
-              } else {
-                setError('뽑기에 실패했습니다.');
-              }
-            } catch (error) {
-              console.error('뽑기 실패:', error);
-              setError('네트워크 오류가 발생했습니다.');
-            } finally {
-              setIsDrawing(false);
+      // 0.5초 후에 결과 표시
+      setTimeout(async () => {
+        try {
+          const response = await fetch('/student/roulette', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
             }
-          },500); // 공이 빠져나오는 애니메이션 완료 후 바로 결과 표시 (2.5초에서 2초로 단축)
-        }, 100); // 0.1초 후 공 빠져나오기 시작
-      }, 4000); // 4초 후 섞이기 완료
-    }, 500); // 0.5초 후 섞이기 시작
-  };
+          });
 
-  // 로또 재시작
-  const resetLottery = () => {
-    setSelectedStudent(null);
-    setDrawCount(0);
-    setIsBallOut(false);
-    setIsShuffling(false);
-    setShuffledPositions([]);
+          if (response.ok) {
+            const result = await response.json();
+            setSelectedStudent(result.student);
+            setDrawCount(prev => prev + 1);
+            
+            // 2단계 성공 시 alert 표시
+            alert(`🎉 당첨자: ${result.student.name} \n3단계를 진행할 수 있습니다.`);
+            
+            // 성공 시 콜백 호출
+            onSuccess(`뽑기 게임 완료! 당첨자: ${result.student.name}`);
+            setHasDrawn(true); // 뽑기 완료 후 상태 업데이트
+          } else if (response.status === 401) {
+            setError('인증이 만료되었습니다. 다시 로그인해주세요.');
+          } else if (response.status === 403) {
+            setError('접근 권한이 없습니다.');
+          } else {
+            setError('뽑기에 실패했습니다.');
+          }
+        } catch (error) {
+          console.error('뽑기 실패:', error);
+          setError('네트워크 오류가 발생했습니다.');
+        } finally {
+          setIsDrawing(false);
+        }
+      }, 500);
+    }, 3000);
   };
 
   if (isLoading) {
@@ -210,6 +114,76 @@ const LotteryGame = ({ onSuccess, token }) => {
     );
   }
 
+  // 각 공의 기본 위치를 CSS 변수로 설정
+  const getBallPosition = (index) => {
+    const totalStudents = students.length;
+    
+    // 학생 수가 10명 이하면 기존 위치 사용
+    if (totalStudents <= 10) {
+      const positions = [
+        { left: '30%', top: '30%' },
+        { left: '70%', top: '30%' },
+        { left: '70%', top: '70%' },
+        { left: '30%', top: '70%' },
+        { left: '50%', top: '20%' },
+        { left: '80%', top: '50%' },
+        { left: '50%', top: '80%' },
+        { left: '20%', top: '50%' },
+        { left: '40%', top: '45%' },
+        { left: '60%', top: '45%' }
+      ];
+      
+      return positions[index] || { left: '50%', top: '50%' };
+    }
+    
+    // 학생 수가 10명을 넘으면 동적으로 위치 계산
+    // 완벽한 원형이 아닌 약간의 랜덤성을 추가하여 자연스럽게
+    const baseAngle = (index / totalStudents) * 2 * Math.PI;
+    const randomOffset = (Math.random() - 0.5) * 0.4; // ±20% 랜덤 오프셋
+    const angle = baseAngle + randomOffset;
+    
+    // 여러 레이어로 분산 (중앙, 중간, 바깥쪽)
+    const layer = index % 5; // 0: 중앙, 1: 중간, 2: 바깥쪽, 3: 가장 바깥쪽, 4: 랜덤
+    const baseRadius = [25, 40, 55, 70, 45][layer]; // 각 레이어별 기본 반지름
+    
+    // 각 공마다 약간의 랜덤한 반지름 변화
+    const radiusVariation = (Math.random() - 0.5) * 20; // ±10% 변화
+    const radius = Math.max(20, Math.min(70, baseRadius + radiusVariation));
+    
+    // 위치 계산
+    const left = 50 + radius * Math.cos(angle);
+    const top = 50 + radius * Math.sin(angle);
+    
+    // 투명 볼 경계 내에 안전하게 배치
+    return {
+      left: `${Math.max(15, Math.min(85, left))}%`,
+      top: `${Math.max(15, Math.min(85, top))}%`
+    };
+  };
+
+  // 각 공의 애니메이션 패턴을 동적으로 할당
+  const getAnimationPattern = (index) => {
+    const patterns = [
+      'shuffleCircle1',
+      'shuffleZigzag1', 
+      'shuffleFigure8',
+      'shuffleRandom1',
+      'shuffleSpiral1',
+      'shuffleSquare1',
+      'shuffleTriangle1',
+      'shuffleRandom2',
+      'shuffleCircle2',
+      'shuffleZigzag2'
+    ];
+    
+    // 패턴이 10개를 넘어가면 랜덤하게 선택
+    if (index < patterns.length) {
+      return patterns[index];
+    } else {
+      return patterns[Math.floor(Math.random() * patterns.length)];
+    }
+  };
+
   return (
     <div className="lottery-game">
       <div className="game-header">
@@ -224,29 +198,27 @@ const LotteryGame = ({ onSuccess, token }) => {
             <div className="transparent-ball">
               {/* 로또 공들 */}
               {students.map((student, index) => {
-                // 현재 위치 결정: 섞이는 중이면 shuffledPositions에서 찾고, 아니면 원래 위치
-                const currentPosition = isShuffling && shuffledPositions.length > 0 
-                  ? shuffledPositions.find(p => p.studentId === student.id) 
-                  : ballPositions[index];
-                
-                // ballPositions가 아직 설정되지 않았으면 렌더링하지 않음
-                if (!ballPositions[index]) return null;
+                const position = getBallPosition(index);
+                // 각 공마다 랜덤한 지연시간과 지속시간 설정
+                const randomDelay = (Math.random() * 0.5).toFixed(2);
+                const randomDuration = (1.2 + Math.random() * 1.0).toFixed(1);
+                const animationPattern = getAnimationPattern(index);
                 
                 return (
                   <div
                     key={student.id}
-                    className={`lottery-ball ${selectedStudent?.id === student.id ? 'selected' : ''} ${isShuffling ? 'shuffling' : ''} ${isBallOut && selectedStudent?.id === student.id ? 'ball-out' : ''}`}
+                    className={`lottery-ball ${selectedStudent?.id === student.id ? 'selected' : ''} ${isShuffling ? 'shuffling' : ''}`}
                     style={{
                       '--ball-color': `hsl(${(index * 137.5) % 360}, 70%, 60%)`,
-                      '--shuffle-duration': `${currentPosition?.duration || 1}s`,
-                      '--shuffle-delay': `${currentPosition?.delay || 0}s`,
-                      '--initial-x': `${ballPositions[index]?.x || 0}px`,
-                      '--initial-y': `${ballPositions[index]?.y || 0}px`,
-                      '--final-x': `${currentPosition?.x || ballPositions[index]?.x || 0}px`,
-                      '--final-y': `${currentPosition?.y || ballPositions[index]?.y || 0}px`,
-                      left: `${currentPosition?.x || ballPositions[index]?.x || 0}px`,
-                      top: `${currentPosition?.y || ballPositions[index]?.y || 0}px`,
-                      transform: 'translate(-50%, -50%)'
+                      '--shuffle-delay': `${randomDelay}s`,
+                      '--shuffle-duration': `${randomDuration}s`,
+                      '--shuffle-animation': animationPattern,
+                      '--ball-index': index,
+                      '--initial-left': position.left,
+                      '--initial-top': position.top,
+                      // 인라인 스타일로 위치 직접 적용
+                      left: position.left,
+                      top: position.top
                     }}
                   >
                     <span className="student-name">
@@ -257,10 +229,10 @@ const LotteryGame = ({ onSuccess, token }) => {
               })}
             </div>
             
-            {/* 빠져나온 공이 표시될 영역 */}
-            {isBallOut && selectedStudent && (
-              <div className="ball-exit-area">
-                <div className="exited-ball">
+            {/* 당첨자 결과 표시 영역 */}
+            {selectedStudent && (
+              <div className="winner-result-area">
+                <div className="winner-display">
                   <div 
                     className="lottery-ball selected"
                     style={{
@@ -280,17 +252,11 @@ const LotteryGame = ({ onSuccess, token }) => {
           <div className="lottery-controls">
             <button
               onClick={drawLottery}
-              disabled={isDrawing || students.length === 0}
-              className={`draw-btn ${isDrawing ? 'drawing' : ''}`}
+              disabled={isDrawing || students.length === 0 || hasDrawn}
+              className={`draw-btn ${isDrawing ? 'drawing' : ''} ${hasDrawn ? 'drawn' : ''}`}
             >
-              {isDrawing ? '뽑는 중...' : '뽑기'}
+              {isDrawing ? '뽑는 중...' : hasDrawn ? '뽑기 완료' : '뽑기'}
             </button>
-            
-            {selectedStudent && (
-              <button onClick={resetLottery} className="reset-btn">
-                다시 시작
-              </button>
-            )}
           </div>
         </div>
         
