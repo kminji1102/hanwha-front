@@ -182,7 +182,7 @@ const HomePage = ({ userInfo, onLogout, token }) => {
           <div className="ascii-modal-overlay" onClick={toggleAsciiTable}>
             <div className="ascii-modal" onClick={(e) => e.stopPropagation()}>
               <div className="ascii-modal-header">
-                <h3>📋 ASCII 코드표</h3>
+                {/* <h3>📋 ASCII 코드표</h3> */}
                 <button className="ascii-modal-close" onClick={toggleAsciiTable}>
                   ✕
                 </button>
@@ -193,7 +193,7 @@ const HomePage = ({ userInfo, onLogout, token }) => {
                   <p><strong>💡 힌트:</strong> "83.78.65.67.75"는 ASCII 코드입니다!</p>
                 </div>
                 
-                <div className="ascii-table">
+                {/* <div className="ascii-table">
                   <div className="ascii-table-header">
                     <span>Dec</span>
                     <span>Hex</span>
@@ -235,7 +235,7 @@ const HomePage = ({ userInfo, onLogout, token }) => {
                       <span className="ascii-desc">{item.desc}</span>
                     </div>
                   ))}
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

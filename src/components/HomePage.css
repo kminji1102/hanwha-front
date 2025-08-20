@@ -358,7 +358,7 @@
 }
 
 .winner-escape-text {
-  font-size: 1.1em;
+  font-size: 1.4em !important;
   line-height: 1.6;
   color: #374151;
   margin: 15px 0;

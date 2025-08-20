@@ -272,7 +272,7 @@ const TangramGame = ({ onSuccess, token }) => {
               <li>scale: {starState.scale}x</li>
               <li>color: {starState.color}</li>
             </ul>
-            {showHint && (
+            {/* {showHint && (
               <div className="hint-info">
                 <p>사용 가능한 명령어:</p>
                 <ul>
@@ -284,7 +284,7 @@ const TangramGame = ({ onSuccess, token }) => {
                   <li><code>reset</code> - 초기 상태로 리셋</li>
                 </ul>
               </div>
-            )}
+            )} */}
           </div>
         </div>
         
@@ -304,7 +304,7 @@ const TangramGame = ({ onSuccess, token }) => {
                 className={`hint-btn ${showHint ? 'active' : ''}`}
                 disabled={isExecuting}
               >
-                {showHint ? '힌트 숨기기' : '힌트 보기'}
+                {showHint ? '목표 위치 숨기기' : '목표 위치 보기'}
               </button>
               <button 
                 onClick={executeVueCode}
