@@ -138,12 +138,20 @@ const TangramGame = ({ onSuccess, token }) => {
         }
       }
       
-      // 위치 이동 명령어 파싱
+      // 위치 이동 명령어 파싱 (CSS 문법 지원: 콜론과 등호 모두 인식)
       if (trimmedCommand.includes('move') || trimmedCommand.includes('position')) {
-        const xMatch = trimmedCommand.match(/x\s*=\s*(\d+)/);
-        const yMatch = trimmedCommand.match(/y\s*=\s*(\d+)/);
+        // x: 300, y: 200 형태 파싱
+        const xMatch = trimmedCommand.match(/x\s*[:=]\s*(\d+)/);
+        const yMatch = trimmedCommand.match(/y\s*[:=]\s*(\d+)/);
         if (xMatch) newState.x = parseInt(xMatch[1]);
         if (yMatch) newState.y = parseInt(yMatch[1]);
+        
+        // position (300, 200) 형태 파싱
+        const positionMatch = trimmedCommand.match(/position\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)/);
+        if (positionMatch) {
+          newState.x = parseInt(positionMatch[1]);
+          newState.y = parseInt(positionMatch[2]);
+        }
       }
       
       // 중앙 이동 명령어
@@ -239,7 +247,7 @@ const TangramGame = ({ onSuccess, token }) => {
   return (
     <div className="tangram-game">
       <div className="game-header">
-        <h2>Tangram Game - 1단계</h2>
+        <h2>1단계</h2>
         <p>별 모양 도형을 조작하여 목표를 달성하세요!</p>
       </div>
       
@@ -255,10 +263,10 @@ const TangramGame = ({ onSuccess, token }) => {
           <div className="canvas-info">
             <p>별의 현재 상태:</p>
             <ul>
-              <li>position: ({starState.x}, {starState.y})</li>
-              <li>rotate: {Math.round(starState.rotation * 180 / Math.PI)}도</li>
-              <li>scale: {starState.scale}x</li>
-              <li>color: {starState.color}</li>
+              <li>position ({starState.x}, {starState.y})</li>
+              <li>rotate {Math.round(starState.rotation * 180 / Math.PI)}</li>
+              <li>scale {starState.scale}x</li>
+              <li>color yellow</li>
             </ul>
             {/* {showHint && (
               <div className="hint-info">
@@ -277,12 +285,12 @@ const TangramGame = ({ onSuccess, token }) => {
         </div>
         
         <div className="code-section">
-          <h3>Vue 코드 입력</h3>
+          <h3>CSS 코드 입력</h3>
           <div className="code-input-container">
             <textarea
               value={vueCode}
               onChange={handleCodeChange}
-              placeholder="Vue.js 코드를 입력하세요."
+              placeholder="CSS 코드를 입력하세요."
               className="code-textarea"
               rows="15"
             />

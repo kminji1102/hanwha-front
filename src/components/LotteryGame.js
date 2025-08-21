@@ -187,7 +187,7 @@ const LotteryGame = ({ onSuccess, token }) => {
   return (
     <div className="lottery-game">
       <div className="game-header">
-        <h2>Lottery Game - 2단계</h2>
+        <h2>2단계</h2>
         <p>투명 볼 안의 공들이 섞인 후 하나가 빠져나옵니다!</p>
       </div>
       
