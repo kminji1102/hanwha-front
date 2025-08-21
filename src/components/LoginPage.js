@@ -32,12 +32,17 @@ const LoginPage = ({ onLoginSuccess }) => {
       if (response.success) {
         // JWT 토큰을 로컬 스토리지에 저장
         localStorage.setItem('token', response.token);
-        localStorage.setItem('userNickname', formData.nickname);
         setMessage('로그인 성공!');
         
-        // AYD 팝업 표시
-        setShowAYDPopup(true);
-        setCurrentAYDId(1);
+        // 토큰이 제대로 저장되었는지 확인 후 AYD 팝업 표시
+        setTimeout(() => {
+          if (localStorage.getItem('token')) {
+            setShowAYDPopup(true);
+            setCurrentAYDId(1);
+          } else {
+            setMessage('토큰 저장에 실패했습니다. 다시 시도해주세요.');
+          }
+        }, 100);
       } else {
         setMessage(response.message || '로그인에 실패했습니다.');
       }
@@ -66,7 +71,7 @@ const LoginPage = ({ onLoginSuccess }) => {
     <div className="login-container">
       <div className="login-card">
         <h2 className="login-title">SIGN IN</h2>
-        <form onSubmit={handleSubmit} className="login-form">
+        <form onSubmit={handleSubmit} className="login-form" autoComplete="off">
           <div className="form-group">
             <label htmlFor="nickname">ID</label>
             <input
@@ -78,6 +83,7 @@ const LoginPage = ({ onLoginSuccess }) => {
               required
               className="form-input"
               placeholder="name을 입력하세요"
+              autoComplete="off"
             />
           </div>
           
@@ -92,6 +98,7 @@ const LoginPage = ({ onLoginSuccess }) => {
               required
               className="form-input"
               placeholder="birthday를 입력하세요"
+              autoComplete="off"
             />
           </div>
 

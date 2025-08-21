@@ -15,9 +15,9 @@ function App() {
     if (token) {
       // 토큰이 있으면 로그인 상태로 설정
       setIsLoggedIn(true);
-      // 사용자 정보 설정 (실제로는 토큰에서 디코딩하거나 API 호출)
+      // 사용자 정보 설정 (ID 기록 없이 기본값 사용)
       setUserInfo({
-        nickname: localStorage.getItem('userNickname') || '사용자'
+        nickname: '사용자'
       });
     }
   }, []);
@@ -31,7 +31,6 @@ function App() {
 
   const handleLogout = useCallback(() => {
     localStorage.removeItem('token');
-    localStorage.removeItem('userNickname');
     setIsLoggedIn(false);
     setUserInfo(null);
   }, []);

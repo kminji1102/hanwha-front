@@ -196,22 +196,6 @@ const TangramGame = ({ onSuccess, token }) => {
       const newState = parseAndExecuteCode(vueCode);
       setStarState(newState);
       
-      // API 호출하여 코드 저장
-      const response = await fetch('/vueCode/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          vueCode: vueCode
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('코드 제출에 실패했습니다.');
-      }
-      
       // 성공 조건 확인
       if (newState.rotation === Math.PI && 
           newState.color === '#FF0000' && 
@@ -220,7 +204,11 @@ const TangramGame = ({ onSuccess, token }) => {
           newState.y === 200) {
         // 성공 메시지 표시
         alert('🎉 1단계 성공! \n2단계를 진행할 수 있습니다.');
+        // API 호출은 HomePage에서 처리하도록 onSuccess만 호출
         onSuccess(vueCode);
+      } else {
+        // 실패 시 메시지 표시
+        alert('목표를 달성하지 못했습니다. 코드를 다시 확인해주세요.');
       }
       
     } catch (error) {

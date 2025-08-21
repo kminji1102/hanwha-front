@@ -51,10 +51,23 @@ const AYDPopup = ({ isOpen, onClose, currentId = 1, onIdChange }) => {
   const [showSecondImage, setShowSecondImage] = useState(false);
   const [showRedOverlay, setShowRedOverlay] = useState(false);
 
+  // 토큰 검증 함수 추가
+  const checkAuth = () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('로그인이 필요합니다. 다시 로그인해주세요.');
+      return false;
+    }
+    return true;
+  };
+
   useEffect(() => {
     if (isOpen && currentId) {
       setLocalId(currentId);
-      loadAYDData(currentId);
+      // 토큰 검증 후 데이터 로드
+      if (checkAuth()) {
+        loadAYDData(currentId);
+      }
       setCurrentQuiz(0);
       setSelectedAnswer(null);
       setIsCorrect(null);
@@ -65,6 +78,11 @@ const AYDPopup = ({ isOpen, onClose, currentId = 1, onIdChange }) => {
   }, [isOpen, currentId]);
 
   const loadAYDData = async (id) => {
+    // 토큰 재검증
+    if (!checkAuth()) {
+      return;
+    }
+
     setLoading(true);
     setError('');
     try {
@@ -78,7 +96,15 @@ const AYDPopup = ({ isOpen, onClose, currentId = 1, onIdChange }) => {
       setAydData(data);
     } catch (err) {
       console.error('AYD 데이터 로드 실패:', err);
-      if (err.message.includes('404') || err.message.includes('존재하지 않습니다')) {
+      if (err.message.includes('인증이 필요합니다')) {
+        setError('로그인이 만료되었습니다. 다시 로그인해주세요.');
+        // 로그인 페이지로 리다이렉트
+        setTimeout(() => {
+          onClose();
+          // 로그인 페이지로 돌아가기 위해 페이지 새로고침
+          window.location.reload();
+        }, 2000);
+      } else if (err.message.includes('404') || err.message.includes('존재하지 않습니다')) {
         setError(`ID ${id}의 이미지가 존재하지 않습니다.`);
         setMaxId(id - 1);
       } else {

@@ -143,7 +143,6 @@ const HomePage = ({ userInfo, onLogout, token }) => {
             <h1 className="welcome-title"></h1>
           </div>
           <div className="user-info">
-            <span className="user-name">{userInfo.nickname}</span>
             <button className="logout-btn" onClick={onLogout}>
               로그아웃
             </button>
