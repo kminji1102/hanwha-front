@@ -109,7 +109,13 @@ const TangramGame = ({ onSuccess, token }) => {
       
       // 색상 변경 명령어 파싱
       if (trimmedCommand.includes('color')) {
-        if (trimmedCommand.includes('red')) {
+        // 헥스 코드 형식 파싱 (예: color #FF0000)
+        const hexMatch = trimmedCommand.match(/color\s+(#[0-9A-Fa-f]{6})/);
+        if (hexMatch) {
+          newState.color = hexMatch[1];
+        }
+        // 기존 텍스트 기반 색상명 지원
+        else if (trimmedCommand.includes('red')) {
           newState.color = '#FF0000';
         } else if (trimmedCommand.includes('blue')) {
           newState.color = '#0000FF';
@@ -146,7 +152,7 @@ const TangramGame = ({ onSuccess, token }) => {
         if (xMatch) newState.x = parseInt(xMatch[1]);
         if (yMatch) newState.y = parseInt(yMatch[1]);
         
-        // position (300, 200) 형태 파싱
+        // position (300, 200) 형태 파싱 - 더 안전한 정규표현식
         const positionMatch = trimmedCommand.match(/position\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)/);
         if (positionMatch) {
           newState.x = parseInt(positionMatch[1]);
@@ -204,18 +210,19 @@ const TangramGame = ({ onSuccess, token }) => {
       const newState = parseAndExecuteCode(vueCode);
       setStarState(newState);
       
-      // 성공 조건 확인
-      if (newState.rotation === Math.PI && 
-          newState.color === '#FF0000' && 
-          newState.scale === 1.5 && 
-          newState.x === 300 && 
-          newState.y === 200) {
+      // 각 조건별 검사
+      const rotationCorrect = newState.rotation === Math.PI;
+      const colorCorrect = newState.color.toUpperCase() === '#FF0000';
+      const scaleCorrect = newState.scale === 1.5;
+      const xCorrect = newState.x === 300;
+      const yCorrect = newState.y === 200;
+      
+      if (rotationCorrect && colorCorrect && scaleCorrect && xCorrect && yCorrect) {
         // 성공 메시지 표시
         alert('🎉 1단계 성공! \n2단계를 진행할 수 있습니다.');
         // API 호출은 HomePage에서 처리하도록 onSuccess만 호출
         onSuccess(vueCode);
       } else {
-        // 실패 시 메시지 표시
         alert('목표를 달성하지 못했습니다. 코드를 다시 확인해주세요.');
       }
       
@@ -266,7 +273,7 @@ const TangramGame = ({ onSuccess, token }) => {
               <li>position ({starState.x}, {starState.y})</li>
               <li>rotate {Math.round(starState.rotation * 180 / Math.PI)}</li>
               <li>scale {starState.scale}x</li>
-              <li>color yellow</li>
+              <li>color {starState.color}</li>
             </ul>
             {/* {showHint && (
               <div className="hint-info">
