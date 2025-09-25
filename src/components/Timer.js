@@ -147,7 +147,6 @@ const Timer = ({ onLogout }) => {
                 value={quizAnswer}
                 onChange={(e) => setQuizAnswer(e.target.value)}
                 placeholder="답을 입력하세요"
-                onKeyPress={(e) => e.key === 'Enter' && handleQuizSubmit()}
                 autoFocus
               />
             </div>
