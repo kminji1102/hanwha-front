@@ -98,19 +98,19 @@ const TangramGame = ({ onSuccess, token }) => {
       const trimmedCommand = command.trim();
       if (!trimmedCommand || trimmedCommand.startsWith('//')) return;
       
-      // 회전 명령어 파싱
+      // 회전 명령어 파싱 (CSS 문법 지원: 콜론 및 deg 허용)
       if (trimmedCommand.includes('rotate')) {
-        const match = trimmedCommand.match(/rotate\s+(\d+)/);
+        const match = trimmedCommand.match(/rotate\s*[:=]?\s*(\d+)\s*(deg)?/i);
         if (match) {
           const degrees = parseInt(match[1]);
           newState.rotation = (degrees * Math.PI) / 180;
         }
       }
       
-      // 색상 변경 명령어 파싱
+      // 색상 변경 명령어 파싱 (CSS 문법 지원: 콜론 허용)
       if (trimmedCommand.includes('color')) {
-        // 헥스 코드 형식 파싱 (예: color #FF0000)
-        const hexMatch = trimmedCommand.match(/color\s+(#[0-9A-Fa-f]{6})/);
+        // 헥스 코드 형식 파싱 (예: color: #FF0000)
+        const hexMatch = trimmedCommand.match(/color\s*[:=]?\s*(#[0-9A-Fa-f]{6})/);
         if (hexMatch) {
           newState.color = hexMatch[1];
         }
@@ -136,9 +136,9 @@ const TangramGame = ({ onSuccess, token }) => {
         }
       }
       
-      // 크기 조절 명령어 파싱
+      // 크기 조절 명령어 파싱 (CSS 문법 지원: 콜론 허용)
       if (trimmedCommand.includes('scale')) {
-        const match = trimmedCommand.match(/scale\s+([\d.]+)/);
+        const match = trimmedCommand.match(/scale\s*[:=]?\s*([\d.]+)/);
         if (match) {
           newState.scale = parseFloat(match[1]);
         }

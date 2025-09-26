@@ -98,11 +98,11 @@ const HomePage = ({ userInfo, onLogout, token }) => {
                   <h3>🎉🎉</h3>
                   {latestWinner ? (
                     <p className="winner-escape-text">
-                      <strong>{latestWinner}</strong>님이 <span className="c5-location">C-5 자리</span>에 가서 <strong>"83.78.65.67.75 사주세요"</strong>라고 말하면 성공입니다.
+                      <strong>{latestWinner}</strong>님이 <span className="c5-location">(C, 5) 자리</span>에 가서 <strong>"83.78.65.67.75 사주세요"</strong>라고 말하면 성공입니다.
                     </p>
                   ) : (
                     <p className="winner-escape-text">
-                      당첨자가 <span className="c5-location">C-5 자리</span>에 가서 <strong>"83.78.65.67.75 사주세요"</strong>라고 말하면 성공입니다.
+                      당첨자가 <span className="c5-location">(C, 5) 자리</span>에 가서 <strong>"83.78.65.67.75 사주세요"</strong>라고 말하면 성공입니다.
                     </p>
                   )}
                   
@@ -190,6 +190,7 @@ const HomePage = ({ userInfo, onLogout, token }) => {
                 {/* 힌트 섹션을 테이블 위로 이동 */}
                 <div className="ascii-hint">
                   <p><strong>💡 힌트:</strong> "83.78.65.67.75"는 ASCII 코드입니다!</p>
+                  <p>65: A</p>
                 </div>
                 
                 {/* <div className="ascii-table">

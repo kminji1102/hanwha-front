@@ -91,6 +91,9 @@
   align-items: center;
   justify-content: center;
   background: white;
+  /* 팝업 내용 스크롤 */
+  overflow-y: auto;
+  max-height: calc(90vh - 80px);
 }
 
 .ayd-loading {
@@ -453,6 +456,9 @@
   .ayd-content {
     padding: 20px;
     min-height: 250px;
+    /* 모바일에서도 내용 스크롤 유지 */
+    overflow-y: auto;
+    max-height: calc(95vh - 70px);
   }
   
   .ayd-navigation {

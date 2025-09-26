@@ -11,6 +11,7 @@ const Timer = ({ onLogout }) => {
   const [isExtended, setIsExtended] = useState(false);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [quizScore, setQuizScore] = useState(0);
+  const [quizFailureCount, setQuizFailureCount] = useState(0);
 
   useEffect(() => {
     let interval = null;
@@ -63,6 +64,7 @@ const Timer = ({ onLogout }) => {
     setIsExtended(false);
     setCurrentQuizIndex(0);
     setQuizScore(0);
+    setQuizFailureCount(0);
   };
 
   const formatTime = (seconds) => {
@@ -112,20 +114,32 @@ const Timer = ({ onLogout }) => {
         setIsExtended(true);
         setIsRunning(true);
         setQuizAnswer('');
+        setQuizFailureCount(0); // 성공 시 실패 카운트 리셋
         alert(`모든 문제를 맞췄습니다! 5분 연장 시간을 드립니다.`);
       }
     } else {
       // 틀린 경우
-      setShowQuiz(false);
-      alert(`틀렸습니다! (${quizScore}/${quizQuestions.length} 문제 맞춤) 실패하셨습니다.`);
-      // 약간의 지연 후 로그아웃 실행
-      setTimeout(() => {
-        if (onLogout) {
-          onLogout();
-        }
-        // 페이지 새로고침으로 초기 로그인 화면으로 강제 이동
-        window.location.reload();
-      }, 100);
+      const newFailureCount = quizFailureCount + 1;
+      setQuizFailureCount(newFailureCount);
+      
+      if (newFailureCount === 1) {
+        // 첫 번째 실패: 경고와 함께 재시도 기회 제공
+        alert(`틀렸습니다! (${quizScore}/${quizQuestions.length} 문제 맞춤)\n\n진짜 마지막 기회입니다. 문제를 잘 읽으세요.`);
+        // 틀린 시점부터 계속 진행 (현재 문제 유지)
+        setQuizAnswer('');
+      } else {
+        // 두 번째 실패: 최종 실패
+        setShowQuiz(false);
+        alert(`틀렸습니다! (${quizScore}/${quizQuestions.length} 문제 맞춤) 실패하셨습니다.`);
+        // 약간의 지연 후 로그아웃 실행
+        setTimeout(() => {
+          if (onLogout) {
+            onLogout();
+          }
+          // 페이지 새로고침으로 초기 로그인 화면으로 강제 이동
+          window.location.reload();
+        }, 100);
+      }
     }
   };
 
